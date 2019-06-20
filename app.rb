@@ -17,13 +17,13 @@ get '/' do
   erb :index
 end
 
-get '/new' do
-  erb :new
+get '/addition' do
+  erb :addition
 end
 
-get '/new/alert' do
+get '/addition/alert' do
   @alert = "注意：メモが空欄です。"
-  erb :new
+  erb :addition
 end
 
 get '/detail/*' do |file_name|
@@ -34,11 +34,11 @@ get '/detail/*' do |file_name|
       @text_lines << line.gsub(/\n/,'<br/>')
     end
   end
-  erb :memo_detail
+  erb :detail
 end
 
-get '/mv_new' do
-  redirect '/new'
+get '/mv_addition' do
+  redirect '/addition'
 end
 
 post '/add_text' do
