@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <link rel="stylesheet" href="/css/style.css">
+  <head>
+    <meta charset="utf-8">
+    <title>sinatra</title>
+  </head>
+  <div class="container">
+        <body>
+          <h1 class="title">✨メモアプリ✨</h1>
+        </body>
+      <form method="post" action="/add_text">
+          <textarea name="text" class="textarea"></textarea>
+          <div class="text_alert">
+            <%= @alert %>
+          </div>
+          <input type="submit" value="保存" class="button">
+      </form>
+  </div>
+</html>

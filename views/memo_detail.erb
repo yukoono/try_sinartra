@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <link rel="stylesheet" href="/css/style.css">
+    <meta charset="utf-8">
+    <title>sinatra</title>
+  </head>
+  <div class="container">
+      <body>
+        <h1 class="title">✨メモアプリ✨</h1>
+        <div class="memo_area">
+        <% @text_lines.each do |text|%>
+          <p><%= text %></p>
+        <%end%>
+        </div>
+      </body>
+      <div class="text_alert">
+      </div>
+      <div class="button_items">
+        <div class="button_item">
+          <form method="post" action="/change/<%= @file_name %>?_method=PATCH">
+            <input type="submit" value="変更" class="button">
+          </form>
+        </div>
+        <div class="button_item">
+          <form method="post" action="/delete/<%= @file_name %>?_method=DELETE">
+            <input type="submit" value="削除" class="button">
+          </form>
+        </div>
+      </div>
+    </div>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <link rel="stylesheet" href="/css/style.css">
+    <meta charset="utf-8">
+    <title>sinatra</title>
+  </head>
+  <body>
+    <div class="container">
+        <h1 class="title">✨メモアプリ✨</h1>
+        <div class="memo_area">
+          <ul class="memo_lines">
+            <% @memo.each do |file_name, text|%>
+              <li>
+                <a href = "detail/<%= file_name.to_s %>"><%= text %></a>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+        <div class="text_alert">
+        </div>
+        <form action="mv_new" method="get">
+          <input type="submit" value="追加" class="button">
+        </form>
+      </div>
+  </body>
+</html>
