@@ -6,26 +6,26 @@
     <title>sinatra</title>
   </head>
   <div class="container">
-      <body>
-        <h1 class="title">✨メモアプリ✨</h1>
-        <div class="memo_area">
-          <p><%= @text %></p>
-        </div>
-      </body>
-      <div class="text_alert">
+    <body>
+      <h1 class="title">✨メモアプリ✨</h1>
+      <div class="memo_area">
+        <p><%= @text %></p>
       </div>
-      <div class="button_items">
-        <div class="button_item">
-          <form method="get" action="/change/<%= @file_path %>">
-            <input type="submit" value="変更" class="button">
-          </form>
-        </div>
-        <div class="button_item">
-          <form method="post" action="/delete/<%= @file_path %>">
-            <input type="submit" value="削除" class="button">
-            <input type="hidden" name="_method" value="DELETE">
-          </form>
-        </div>
+    </body>
+    <div class="text_alert">
+    </div>
+    <div class="button_items">
+      <div class="button_item">
+        <form method="get" action="/change/<%= @file_path %>">
+          <input type="submit" value="変更" class="button">
+        </form>
+      </div>
+      <div class="button_item">
+        <form method="post" action="/delete/<%= @file_path %>">
+          <input type="submit" value="削除" class="button">
+          <input type="hidden" name="_method" value="DELETE">
+        </form>
       </div>
     </div>
+  </div>
 </html>
