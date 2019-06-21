@@ -53,6 +53,24 @@ get "/mv_addition" do
   redirect "/addition"
 end
 
+get "/change/alert/*" do |file_path|
+  @file_path = file_path
+  File.open(file_path, "r") do |file|
+    @text = file.read.gsub(/\n/, "<br/>")
+  end
+  @alert = "このメモを消去します。よろしいですか？"
+  erb :change_alert
+end
+
+get "/change/*" do |file_path|
+  @file_path = file_path
+  @text_lines = []
+  File.open(file_path, "r") do |f|
+    @text = f.read.gsub(/\r\n/, "&#13;")
+  end
+  erb :change
+end
+
 post "/add_text" do
   input = params[:text]
   if character?(input)
@@ -75,24 +93,6 @@ post "/add_text" do
   else
     redirect "/addition/alert"
   end
-end
-
-get "/change/alert/*" do |file_path|
-  @file_path = file_path
-  File.open(file_path, "r") do |file|
-    @text = file.read.gsub(/\n/, "<br/>")
-  end
-  @alert = "このメモを消去します。よろしいですか？"
-  erb :change_alert
-end
-
-get "/change/*" do |file_path|
-  @file_path = file_path
-  @text_lines = []
-  File.open(file_path, "r") do |f|
-    @text = f.read.gsub(/\r\n/, "&#13;")
-  end
-  erb :change
 end
 
 patch "/changed/*" do |file_path|
