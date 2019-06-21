@@ -90,7 +90,7 @@ get "/change/*" do |file_path|
   @file_path = file_path
   @text_lines = []
   File.open(file_path, "r") do |f|
-    @text = f.read.gsub(/\n/, "&#13;")
+    @text = f.read.gsub(/\r\n/, "&#13;")
   end
   erb :change
 end
