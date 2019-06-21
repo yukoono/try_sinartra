@@ -8,11 +8,12 @@
   <div class="container">
     <body>
       <h1 class="title">✨メモアプリ✨</h1>
-      <form method="post" action="/changed/<%= @file_name %>?_method=PATCH">
+      <form method="post" action="/changed/<%= @file_name %>">
         <textarea name="text" class="textarea"><% @text_lines.each do |text|%><%= text %><%end%></textarea>
         <div class="text_alert">
         </div>
         <input type="submit" value="変更" class="button">
+        <input type="hidden" name="_method" value="PATCH">
       </form>
     </body>
   </div>

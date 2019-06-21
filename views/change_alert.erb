@@ -18,12 +18,13 @@
       </div>
       <div class="button_items">
         <div class="button_item">
-        <form method="post" action="/delete/<%= @file_name %>?_method=DELETE">
+          <form method="post" action="/delete/<%= @file_name %>">
             <input type="submit" value="はい" class="button">
+            <input type="hidden" name="_method" value="DELETE">
           </form>
         </div>
         <div class="button_item">
-          <form method="post" action="/change/<%= @file_name %>?_method=PATCH">
+          <form method="get" action="/change/<%= @file_name %>">
             <input type="submit" value="いいえ" class="button">
           </form>
         </div>

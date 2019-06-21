@@ -1,8 +1,10 @@
-require 'sinatra'
-require 'sinatra/reloader'
-require 'time'
+# frozen_string_literal: true
 
-get '/' do
+require "sinatra"
+require "sinatra/reloader"
+require "time"
+
+get "/" do
   directry_name = ARGV[0] || Dir.pwd + "/memo"
   file_names = Dir.entries(directry_name)
   file_names.select! { |file_name| file_name[0] != "." }
@@ -10,44 +12,52 @@ get '/' do
   @memo = {}
   file_names.each do |file_name|
     file_path = "memo/" + file_name
-    File.open(file_path,'r') do |f|
-      @memo[file_path] = f.gets
+    File.open(file_path, "r") do |f|
+      while 1 do
+        memo_line = f.gets
+        unless memo_line.nil?
+          unless memo_line.delete("\n").delete("\r").empty?
+            @memo[file_path] = memo_line
+            break
+          end
+        end
+      end
     end
   end
   erb :index
 end
 
-get '/addition' do
+get "/addition" do
   erb :addition
 end
 
-get '/addition/alert' do
+get "/addition/alert" do
   @alert = "注意：メモが空欄です。"
   erb :addition
 end
 
-get '/detail/*' do |file_name|
+get "/detail/*" do |file_name|
   @file_name = file_name
   @text_lines = []
-  File.open(file_name, 'r') do |f|
+  File.open(file_name, "r") do |f|
     f.each_line do |line|
-      @text_lines << line.gsub(/\n/,'<br/>')
+      @text_lines << line.gsub(/\n/, "<br/>")
     end
   end
   erb :detail
 end
 
-get '/mv_addition' do
-  redirect '/addition'
+get "/mv_addition" do
+  redirect "/addition"
 end
 
-post '/add_text' do
+post "/add_text" do
   unless params[:text].delete("\n").delete("\r").empty?
     writeable = 0
     while 1 do
       time = Time.now
-      File.open("memo/text#{time}.txt",'a') do |f|
-        if f.flock(File::LOCK_EX|File::LOCK_NB)
+      File.open("memo/text#{time}.txt", "a") do |f|
+        if f.flock(File::LOCK_EX | File::LOCK_NB)
           f.puts params[:text]
           writeable = 1
           f.flock(File::LOCK_UN)
@@ -57,28 +67,28 @@ post '/add_text' do
         break
       end
     end
-    redirect '/'
+    redirect "/"
   else
-    redirect '/new/alert'
+    redirect "/addition/alert"
   end
 end
 
-get '/change/alert/*' do |file_name|
+get "/change/alert/*" do |file_name|
   @file_name = file_name
   @text_lines = []
-  File.open(file_name, 'r') do |f|
+  File.open(file_name, "r") do |f|
     f.each_line do |line|
-      @text_lines << line.gsub(/\n/,'<br/>')
+      @text_lines << line.gsub(/\n/, "<br/>")
     end
   end
   @alert = "このメモを消去します。よろしいですか？"
   erb :change_alert
 end
 
-patch '/change/*' do |file_name|
+get "/change/*" do |file_name|
   @file_name = file_name
   @text_lines = []
-  File.open(file_name, 'r') do |f|
+  File.open(file_name, "r") do |f|
     f.each_line do |line|
       @text_lines << line
     end
@@ -86,19 +96,19 @@ patch '/change/*' do |file_name|
   erb :change
 end
 
-patch '/changed/*' do |file_name|
+patch "/changed/*" do |file_name|
   unless params[:text].delete("\n").delete("\r").empty?
-    File.open(file_name, 'w') do |f|
+    File.open(file_name, "w") do |f|
       f.write params[:text]
     end
-    redirect '/'
+    redirect "/"
   else
-    alert_address = "/change/alert/"+file_name.gsub(/ /,'%20')
+    alert_address = "/change/alert/" + file_name.gsub(/ /, "%20")
     redirect alert_address
   end
 end
 
-delete '/delete/*' do |file_name|
+delete "/delete/*" do |file_name|
   FileUtils.rm(file_name)
-  redirect '/'
+  redirect "/"
 end
