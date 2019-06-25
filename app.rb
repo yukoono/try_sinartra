@@ -13,7 +13,7 @@ def character?(input)
 end
 
 get "/" do
-  directry_name = "/Users/yuko.ono/Documents/try_sinatra/memo"
+  directry_name = Dir.pwd + "/memo"
   file_names = Dir.entries(directry_name)
   file_names.select! { |file_name| file_name[0] != "." }
   file_names.sort!
