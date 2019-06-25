@@ -13,7 +13,7 @@ def character?(input)
 end
 
 get "/" do
-  directry_name = ARGV[0] || Dir.pwd + "/memo"
+  directry_name = "/Users/yuko.ono/Documents/try_sinatra/memo"
   file_names = Dir.entries(directry_name)
   file_names.select! { |file_name| file_name[0] != "." }
   file_names.sort!
@@ -77,7 +77,7 @@ post "/add_text" do
     writeable = 0
     while 1 do
       time = Time.now
-      file_path = "memo/text#{time}.txt"
+      file_path = "memo/text#{time.iso8601(6)}.txt".gsub(" ", "")
       File.open(file_path, "a") do |file|
         if file.flock(File::LOCK_EX | File::LOCK_NB)
           file.puts input
@@ -103,7 +103,7 @@ patch "/changed/*" do |file_path|
     end
     redirect "/"
   else
-    alert_uri = "/change/alert/" + file_path.gsub(/ /, "%20")
+    alert_uri = "/change/alert/" + file_path
     redirect alert_uri
   end
 end
