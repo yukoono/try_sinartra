@@ -8,8 +8,8 @@
   <div class="container">
     <body>
       <h1 class="title">✨メモアプリ✨</h1>
-      <form method="post" action="/changed/<%= @file_path %>">
-        <textarea name="text" class="textarea"><%= @text %></textarea>
+      <form method="post" action="/changed/<%= @memo.path %>">
+        <textarea name="text" class="textarea"><%= @memo.text %></textarea>
         <div class="text_alert">
         </div>
         <input type="submit" value="変更" class="button">

@@ -2,33 +2,13 @@
 
 require "sinatra"
 require "sinatra/reloader"
-require "time"
+require_relative "memo.rb"
 
-def character?(input)
-  if !input.nil?
-    !input.delete("\n").delete("\r").empty?
-  else
-    false
-  end
-end
+ROOT_DIR = File.expand_path(File.dirname(__FILE__))
+also_reload File.join(ROOT_DIR, "memo.rb")
 
 get "/" do
-  directry_name = Dir.pwd + "/memo"
-  file_names = Dir.entries(directry_name)
-  file_names.select! { |file_name| file_name[0] != "." }
-  file_names.sort!
-  @memo = {}
-  file_names.each do |file_name|
-    file_path = "memo/" + file_name
-    File.open(file_path, "r") do |file|
-      file.each_line do |line|
-        if character?(line)
-          @memo[file_path] = line
-          break
-        end
-      end
-    end
-  end
+  @list = Memo::List.new.make
   erb :index
 end
 
@@ -41,11 +21,8 @@ get "/addition/alert" do
   erb :addition
 end
 
-get "/detail/*" do |file_path|
-  @file_path = file_path
-  File.open(file_path, "r") do |file|
-    @text = file.read.gsub(/\n/, "<br/>")
-  end
+get "/detail/*" do |path|
+  @memo = Memo.find(path)
   erb :detail
 end
 
@@ -53,62 +30,41 @@ get "/mv_addition" do
   redirect "/addition"
 end
 
-get "/change/alert/*" do |file_path|
-  @file_path = file_path
-  File.open(file_path, "r") do |file|
-    @text = file.read.gsub(/\n/, "<br/>")
-  end
+get "/change/alert/*" do |path|
+  @memo = Memo.find(path)
   @alert = "このメモを消去します。よろしいですか？"
   erb :change_alert
 end
 
-get "/change/*" do |file_path|
-  @file_path = file_path
-  @text_lines = []
-  File.open(file_path, "r") do |f|
-    @text = f.read.gsub(/\r\n/, "&#13;")
-  end
+get "/change/*" do |path|
+  @memo = Memo.find(path)
+  @memo.adupt_text_area
   erb :change
 end
 
-post "/add_text" do
-  input = params[:text]
-  if character?(input)
-    writeable = 0
-    while 1 do
-      time = Time.now
-      file_path = "memo/text#{time.iso8601(6)}.txt".gsub(" ", "")
-      File.open(file_path, "a") do |file|
-        if file.flock(File::LOCK_EX | File::LOCK_NB)
-          file.puts input
-          writeable = 1
-          file.flock(File::LOCK_UN)
-        end
-      end
-      if writeable == 1
-        break
-      end
-    end
+post "/add_memo" do
+  text = params[:text]
+  if Validator.character?(text)
+    @memo = Memo.new.create(text)
     redirect "/"
   else
     redirect "/addition/alert"
   end
 end
 
-patch "/changed/*" do |file_path|
-  input = params[:text]
-  if character?(input)
-    File.open(file_path, "w") do |file|
-      file.write input
-    end
+patch "/changed/*" do |path|
+  text = params[:text]
+  @memo = Memo.find(path)
+  if Validator.character?(text)
+    @memo.edit(text)
     redirect "/"
   else
-    alert_uri = "/change/alert/" + file_path
+    alert_uri = "/change/alert/" + path
     redirect alert_uri
   end
 end
 
-delete "/delete/*" do |file_path|
-  FileUtils.rm(file_path)
+delete "/delete/*" do |path|
+  @memo = Memo.delete(path)
   redirect "/"
 end

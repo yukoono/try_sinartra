@@ -10,9 +10,9 @@
       <h1 class="title">✨メモアプリ✨</h1>
       <div class="memo_area">
         <ul class="memo_lines">
-          <% @memo.each do |file_path, text|%>
+          <% @list.each do |path, text|%>
             <li>
-              <a href = "detail/<%= file_path.to_s %>"><%= text %></a>
+              <a href = "detail/<%= path.to_s %>"><%= text %></a>
             </li>
           <% end %>
         </ul>
