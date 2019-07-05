@@ -2,24 +2,7 @@
 
 require "securerandom"
 require "time"
-
-module Validator
-  def self.character?(text)
-    if !text.nil?
-      !text.delete("\n").delete("\r").empty?
-    else
-      false
-    end
-  end
-end
-
-module FileNames
-  def self.read
-    directry_name = Dir.pwd + "/memo"
-    file_names = Dir.entries(directry_name)
-    file_names.select! { |file_name| file_name[0] != "." }
-  end
-end
+require_relative "app.rb"
 
 class Memo
   include FileNames
@@ -63,43 +46,12 @@ class Memo
 
   private
     def generate_name
-      names = FileNames.read
+      names = FileNames.fetch
       time = Time.now
       name = "#{time}#{SecureRandom.uuid}.txt".gsub(" ", "")
       while names.include?(name) do
         name = "#{time}#{SecureRandom.uuid}.txt".gsub(" ", "")
       end
       name
-    end
-end
-
-class Memo::List
-  include Validator, FileNames
-
-  def make
-    names = group
-    list = {}
-    names.each do |name|
-      path, line = read_line(name)
-      list[path] = line
-    end
-    list
-  end
-
-  private
-    def group
-      names = FileNames.read
-      names.sort!.reverse!
-    end
-
-    def read_line(name)
-      path = "memo/" + name
-      File.open(path, "r") do |file|
-        file.each_line do |line|
-          if Validator.character?(line)
-            return path, line
-          end
-        end
-      end
     end
 end

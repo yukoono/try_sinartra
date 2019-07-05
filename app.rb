@@ -3,12 +3,14 @@
 require "sinatra"
 require "sinatra/reloader"
 require_relative "memo.rb"
+require_relative "memo_list.rb"
 
 ROOT_DIR = File.expand_path(File.dirname(__FILE__))
 also_reload File.join(ROOT_DIR, "memo.rb")
+also_reload File.join(ROOT_DIR, "memo_list.rb")
 
 get "/" do
-  @list = Memo::List.new.make
+  @list = MemoList.new.create
   erb :index
 end
 
@@ -67,4 +69,22 @@ end
 delete "/delete/*" do |path|
   @memo = Memo.delete(path)
   redirect "/"
+end
+
+module Validator
+  def self.character?(text)
+    if !text.nil?
+      !text.delete("\n").delete("\r").empty?
+    else
+      false
+    end
+  end
+end
+
+module FileNames
+  def self.fetch
+    directry_name = Dir.pwd + "/memo"
+    file_names = Dir.entries(directry_name)
+    file_names.select! { |file_name| file_name[0] != "." }
+  end
 end
