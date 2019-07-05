@@ -2,7 +2,7 @@
 
 require "securerandom"
 require "time"
-require_relative "app.rb"
+require_relative "file_names.rb"
 
 class Memo
   include FileNames
