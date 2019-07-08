@@ -2,9 +2,9 @@
 
 require "sinatra"
 require "sinatra/reloader"
-require_relative "validator.rb"
-require_relative "memo.rb"
-require_relative "memo_list.rb"
+require_relative "validator"
+require_relative "memo"
+require_relative "memo_list"
 
 ROOT_DIR = File.expand_path(File.dirname(__FILE__))
 also_reload File.join(ROOT_DIR, "memo.rb")

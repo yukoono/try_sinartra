@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "file_names.rb"
+require_relative "file_names"
 
 class Memo::List
   include Validator
